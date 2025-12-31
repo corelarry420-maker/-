@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <title>2d game Untitled</title>
+    
+
+  </head>
+    
+  <body>
+  <!DOCTYPE html>
+<html lang="ar">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>فوكا للتواصل</title>
+<style>
+body{margin:0;font-family:Arial;background:#f0f2f5;}
+#app{max-width:600px;margin:0 auto;padding:20px;}
+header{text-align:center;margin-bottom:20px;}
+nav{display:flex;justify-content:space-around;margin-bottom:20px;}
+nav button{padding:10px 20px;border:none;border-radius:10px;background:#1877f2;color:white;cursor:pointer;}
+section{display:none;}
+#feed .post{background:white;padding:10px;margin-bottom:10px;border-radius:10px;box-shadow:0 2px 5px rgba(0,0,0,0.1);}
+#feed img{max-width:100%;border-radius:10px;margin-top:10px;}
+#bot-messages{background:white;height:300px;overflow-y:auto;padding:10px;margin-bottom:10px;border-radius:10px;box-shadow:0 2px 5px rgba(0,0,0,0.1);}
+#bot-input{width:70%;padding:10px;}
+#send-bot-btn{padding:10px;background:#3498db;color:white;border:none;border-radius:5px;cursor:pointer;}
+</style>
+</head>
+<body>
+<div id="app">
+<header><h1>فوكا للتواصل</h1></header>
+<nav>
+  <button id="home-btn">الرئيسية</button>
+  <button id="post-btn-nav">نشر</button>
+  <button id="bots-btn">البوتات</button>
+</nav>
+
+<section id="home-section">
+  <h2>تصفح المنشورات</h2>
+  <div id="feed"></div>
+</section>
+
+<section id="create-post-section">
+  <textarea id="post-text" placeholder="اكتب منشورك هنا..."></textarea>
+  <input type="file" id="post-image" accept="image/*">
+  <button id="publish-btn">انشر</button>
+</section>
+
+<section id="bots-section">
+  <h2>رسائل البوتات</h2>
+  <div id="bot-messages"></div>
+  <input id="bot-input" placeholder="اكتب للبوت..." />
+  <button id="send-bot-btn">أرسل</button>
+</section>
+</div>
+
+<script>
+const homeBtn = document.getElementById('home-btn');
+const postBtnNav = document.getElementById('post-btn-nav');
+const botsBtn = document.getElementById('bots-btn');
+const homeSection = document.getElementById('home-section');
+const createPostSection = document.getElementById('create-post-section');
+const botsSection = document.getElementById('bots-section');
+
+function showSection(section){
+  homeSection.style.display='none';
+  createPostSection.style.display='none';
+  botsSection.style.display='none';
+  section.style.display='block';
+}
+
+homeBtn.addEventListener('click', ()=>showSection(homeSection));
+postBtnNav.addEventListener('click', ()=>showSection(createPostSection));
+botsBtn.addEventListener('click', ()=>showSection(botsSection));
+
+// تفعيل الشاشة الرئيسية بالبداية
+showSection(homeSection);
+
+// المنشورات
+const feed = document.getElementById('feed');
+const publishBtn = document.getElementById('publish-btn');
+publishBtn.addEventListener('click', ()=>{
+    const text = document.getElementById('post-text').value;
+    const imageInput = document.getElementById('post-image');
+    const imageFile = imageInput.files[0];
+    if(!text && !imageFile) return alert("اكتب شيئاً أو أضف صورة!");
+    const postDiv = document.createElement('div');
+    postDiv.classList.add('post');
+    postDiv.innerHTML = `
+        <p>${text}</p>
+        ${imageFile? `<img src="${URL.createObjectURL(imageFile)}">`:''}
+    `;
+    feed.prepend(postDiv);
+    document.getElementById('post-text').value='';
+    imageInput.value='';
+});
+
+// بوتات
+const botMessagesDiv = document.getElementById('bot-messages');
+const botInput = document.getElementById('bot-input');
+const sendBotBtn = document.getElementById('send-bot-btn');
+
+function botReply(userMsg){
+    // بوت بسيط يرد بالإنجليزي أو عربي
+    let reply = '';
+    if(userMsg.toLowerCase().includes('hello')) reply='Hello! How are you?';
+    else if(userMsg.includes('مرحبا')) reply='مرحبا! كيف حالك؟';
+    else reply="🤖 أنا بوت فوكا أستجيب لك بالعربية أو الإنجليزية";
+    return reply;
+}
+
+sendBotBtn.addEventListener('click', ()=>{
+    const msg = botInput.value;
+    if(!msg) return;
+    const userP = document.createElement('p');
+    userP.textContent = "أنت: "+msg;
+    botMessagesDiv.appendChild(userP);
+    const botP = document.createElement('p');
+    botP.textContent = "بوت: "+botReply(msg);
+    botMessagesDiv.appendChild(botP);
+    botMessagesDiv.scrollTop = botMessagesDiv.scrollHeight;
+    botInput.value='';
+});
+</script>
+</body>
+</html>
+    
+  </body>
+  
+</html>
